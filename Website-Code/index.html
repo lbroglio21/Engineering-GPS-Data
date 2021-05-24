@@ -48,12 +48,12 @@ body {
 </div>
 <div class="container">
   <div class="center">
-   <button onclick="getLocation()" style= "background-color: blue; border-color: blue; color: white; width: 250px" class="cenetr" >Try It</button>
+   <button onclick="buttonFunct()" style= "background-color: blue; border-color: blue; color: white; width: 250px" class="cenetr" >Try It</button>
   </div>
 </div>
 
 <div class="header">
-  
+
 </div>
 
     <p id="demo"></p>
@@ -61,21 +61,71 @@ body {
 <script>
 var x = document.getElementById("demo");
 
+var saveData = (function () {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    return function (data, fileName) {
+        var json = JSON.stringify(data),
+            blob = new Blob([json], {type: "octet/stream"}),
+            url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+}());
+
+var GPSloc = "";
+var spacer = " ";
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
+
+
+  }
+  else {
     x.innerHTML = "Geolocation is not supported by this browser.";
   }
+
+
 }
 
 function showPosition(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  x.innerHTML = "Latitude: " + position.coords.latitude +
   "<br>Longitude: " + position.coords.longitude;
-    
+  var lat = "Latitude:" + position.coords.latitude;
+  var long = "Longitude:" + position.coords.longitude;
+  GPSloc = lat+spacer+long;
+  var data = {GPSloc}
+  var fileName = "GPSDATA.json";
+  saveData(data, fileName);
 }
 
+//const fs = require('fs')
+
+// Data which will write in a file.
+
+
+
+
+
+//function buttonFunct(){
+
+
+  getLocation();
+
+
+
+
+
+
+
+//}
+
+
 </script>
+
 
 </body>
 </html>
